@@ -16,6 +16,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	private static String TAG = MainGamePanel.class.getSimpleName();
 	private MainThread thread;
 	private Robot robot;
+	private Robot bana;
 	
 	public MainGamePanel(Context context) {
 		super(context);
@@ -23,6 +24,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		 getHolder().addCallback(this);
 		 
 		 robot = new Robot(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1),50,50);
+		 bana = new Robot(BitmapFactory.decodeResource(getResources(), R.drawable.bana),350,550);
 		 
 		 thread = new MainThread(getHolder(),this);
 		 
@@ -86,6 +88,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
 		robot.draw(canvas);
+		bana.draw(canvas);
 		//canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 10, 10,null);
 	}
 
