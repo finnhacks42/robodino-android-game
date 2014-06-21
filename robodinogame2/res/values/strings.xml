@@ -4,5 +4,6 @@
     <string name="app_name">robodinogame2</string>
     <string name="hello_world">Hello world!!!</string>
     <string name="action_settings">Settings</string>
-
+	<string name="char_namep1">Player 1</string>
+	<string name="char_namep2">Player 2</string>
 </resources>
