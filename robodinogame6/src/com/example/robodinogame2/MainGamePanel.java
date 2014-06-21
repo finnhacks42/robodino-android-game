@@ -18,6 +18,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	private MainThread thread;
 	private Robot robot;
 	private Banana banana;
+	long lastTick = 0;
+	int startX = 0;
+	int startY = 0;
+	
 	
 	public MainGamePanel(Context context) {
 		super(context);
@@ -25,7 +29,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		 getHolder().addCallback(this);
 		 
 		 robot = new Robot(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1),50,50);
-		 banana  = new Banana(BitmapFactory.decodeResource(getResources(), R.drawable.betterbanana),200,200);
+		 banana  = new Banana(BitmapFactory.decodeResource(getResources(), R.drawable.betterbanana),200,200,100);
 		 thread = new MainThread(getHolder(),this);
 		 
 		// make the GamePanel focusable so it can handle events
@@ -58,13 +62,12 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	}
 	
 	public boolean onTouchEvent(MotionEvent event) {
-		int startX = 0;
-		int startY = 0;
+
 		
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 			startX = (int)event.getX();
 			startY = (int)event.getY();
-			Log.d(TAG, "start vals = " + startX + " , " + startY);
+
 			robot.handleActionDown((int)event.getX(),(int)event.getY());
 			if (event.getY() > getHeight() - 100) {
 				thread.setRunning(false);
@@ -84,14 +87,17 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		}
 		
 		if (event.getAction() == MotionEvent.ACTION_UP) {
+			banana.setX((int)event.getX());
+			banana.setY((int)event.getY());
 			if (robot.isTouched()) {
 				robot.setTouched(false);
 
 			}
 			Log.d(TAG, "end vals = " + banana.getX() + " , " + banana.getY());
 			
-			double theta = Math.atan2(10-10,20-10);//startY - banana.getY(), startX - banana.getX());
-			Log.d(TAG, "angle rad =" + theta);
+
+			double theta = Math.atan2(startY - banana.getY(), startX - banana.getX());
+	
 			 
 		   // theta += Math.PI/2.0;
 
@@ -101,17 +107,35 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		    if (angle < 0) {
 		        angle += 360;
 		    }
-		    Log.d(TAG, "angle =" + angle);
+		    
+		    banana.setVelocity((int)Math.sqrt(Math.pow(startX - banana.getX(), 2) + Math.pow(startY- banana.getY(), 2)));
+		    banana.setAngle((int)angle);
+		    Log.d(TAG, "angle =" + banana.getAngle());
+		    Log.d(TAG, "velocity =" + banana.getVelocity());
 		}
 		
 		return true;
 		
 	}
 	
+	public void bananaupdate(){
+		
+	
+	
+	
+	}
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
 		robot.draw(canvas);
 		banana.draw(canvas);
+		
+
+        if (lastTick < System.currentTimeMillis()  +250) {
+        	lastTick = System.currentTimeMillis();
+        	bananaupdate();
+        	banana.setY(banana.getY()+ 10);
+        	Log.d(TAG, "tick...");
+        }
 		//canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 10, 10,null);
 	}
 

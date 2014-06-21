@@ -12,6 +12,7 @@ private int velocity;
 private int angle;
 private int scale;
 
+
 public int getX() {
 	return x;
 }
