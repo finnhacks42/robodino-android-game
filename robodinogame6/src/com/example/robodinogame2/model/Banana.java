@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 public class Banana {
 	private Bitmap bitmap;
 private Bitmap scaledBananaBitmap;
+private Bitmap rotatableBitmap;
 private int x;
 private int y;
 private int velocity;
@@ -19,6 +20,7 @@ private int width = 50;
 // but we may have to come back and convert it at some stage...
 private int moveX;
 private int moveY;
+private int orientationDegree;
 
 
 public int getX() {
@@ -49,26 +51,34 @@ public void setY(int y) {
 	this.y = y;
 }
 
-public void rotateBanana(){
+public void rotate(){
+	this.orientationDegree+=8;
+	if(this.orientationDegree>=360)
+	{
+		this.orientationDegree=0;
+	}
 	Matrix matrix = new Matrix();
-	matrix.setRotate(1);
-	Bitmap bmpBowRotated = Bitmap.createBitmap(this.scaledBananaBitmap, 0, 0, this.scaledBananaBitmap.getWidth(),this.scaledBananaBitmap.getHeight(), matrix, false);
-	this.scaledBananaBitmap=bmpBowRotated;
+	matrix.postRotate(this.orientationDegree);
+	this.rotatableBitmap = Bitmap.createBitmap(this.scaledBananaBitmap, 0, 0, this.scaledBananaBitmap.getWidth(),this.scaledBananaBitmap.getHeight(), matrix, false);
+
 }
 
 public Banana(Bitmap bitmap, int x, int y, int scale) {
 	
 	this.bitmap = bitmap;
 	this.scaledBananaBitmap= Bitmap.createScaledBitmap(this.bitmap, width, height, false);
+	this.rotatableBitmap=this.scaledBananaBitmap;
 	this.x = x;
 	this.y = y;
+	this.orientationDegree=0;
+	
 	
 	
 }
 
 public void draw(Canvas canvas) {
 	
-	 canvas.drawBitmap(scaledBananaBitmap, x, y, null);
+	 canvas.drawBitmap(rotatableBitmap, x, y, null);
 	 
 	
 }
