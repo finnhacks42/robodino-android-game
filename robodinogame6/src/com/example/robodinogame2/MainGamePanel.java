@@ -8,9 +8,11 @@ import com.example.robodinogame2.model.Robot;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -30,6 +32,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	 int screenHeight;
 	 int currentBanana = 0;
 	 int score = 0;
+	 String strScoreString="Score:";
 	 
 	 Random r=new Random();
 	//	speed= r.nextInt(10);
@@ -41,7 +44,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		 DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		 screenWidth = metrics.widthPixels;
 		 screenHeight = metrics.heightPixels;
-		 
+		 strScoreString.format("Score: %d", score);
 		 //initialise robots
 		 for(int i=0; i<robot.length; i++){
 		       robot[i] = new Robot(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1),-300,r.nextInt(screenHeight));
@@ -164,6 +167,22 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		
 	}
 	
+	private void drawScore(Canvas canvas)
+	{
+		strScoreString = String.format("Score: %d", score);
+    	
+    	Resources resources = this.getResources();
+    	float scale = resources.getDisplayMetrics().density;
+    	Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    	  // text color - #3D3D3D
+    	  paint.setColor(Color.rgb(120, 120, 120));
+    	  // text size in pixels
+    	  paint.setTextSize((int) (40 * scale));
+    	  // text shadow
+    	  paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
+    	canvas.drawText(strScoreString, ((screenWidth/100)*80),((screenHeight/100)*4),paint );
+	}
+	
 	
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
@@ -197,6 +216,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         	}
         	collisionDetect();
         	monkey.waveArm();
+        	
         	
         }
 		//canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 10, 10,null);
