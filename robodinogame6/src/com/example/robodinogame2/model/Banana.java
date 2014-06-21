@@ -52,10 +52,10 @@ public void setY(int y) {
 }
 
 public void rotate(){
-	this.orientationDegree+=8;
-	if(this.orientationDegree>=360)
+	this.orientationDegree-=16;
+	if(this.orientationDegree<=0)
 	{
-		this.orientationDegree=0;
+		this.orientationDegree=360;
 	}
 	Matrix matrix = new Matrix();
 	matrix.postRotate(this.orientationDegree);
@@ -88,6 +88,7 @@ public void update(){
 	y+=moveY;
 	//apply gravity
 	moveY+=2;
+	rotate();
 	
 
 
