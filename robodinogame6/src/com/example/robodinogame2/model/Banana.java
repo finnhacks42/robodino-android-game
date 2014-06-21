@@ -19,6 +19,11 @@ public int getVelocity() {
 public void setVelocity(int velocity) {
 	this.velocity = velocity;
 }
+
+public void setDensity(int density){
+	this.bitmap.setDensity(density);
+}
+
 public int getAngle() {
 	return angle;
 }
