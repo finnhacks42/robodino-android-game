@@ -99,7 +99,7 @@ public void update(){
 	}
 }
 public void kill(){
-	x = -100;
+	x = -300;
 	
 		
 }

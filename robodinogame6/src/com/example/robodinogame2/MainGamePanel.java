@@ -22,7 +22,7 @@ import android.view.SurfaceView;
 public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	private static String TAG = MainGamePanel.class.getSimpleName();
 	private MainThread thread;
-	private Robot[] robot = new Robot[10];
+	private Robot[] robot = new Robot[20];
 	private Banana[] banana = new Banana[5];
 	private Monkey monkey;
 	long lastTick = 0;
@@ -32,8 +32,13 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	 int screenHeight;
 	 int currentBanana = 0;
 	 int score = 0;
+
+	 int life = 10;
+	 float timer=150;
+
 	 String strScoreString="Score:";
 	 
+
 	 Random r=new Random();
 	//	speed= r.nextInt(10);
 	
@@ -47,7 +52,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		 strScoreString.format("Score: %d", score);
 		 //initialise robots
 		 for(int i=0; i<robot.length; i++){
-		       robot[i] = new Robot(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1),-300,r.nextInt(screenHeight));
+		       robot[i] = new Robot(BitmapFactory.decodeResource(getResources(), R.drawable.dino),-300,r.nextInt(screenHeight));
 		}
 		for(int i=0; i<banana.length; i++){
 		  banana[i]  = new Banana(BitmapFactory.decodeResource(getResources(), R.drawable.betterbanana),-300,200,100);
@@ -180,8 +185,24 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
     	  paint.setTextSize((int) (40 * scale));
     	  // text shadow
     	  paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
-    	canvas.drawText(strScoreString, ((screenWidth/100)*80),((screenHeight/100)*4),paint );
+    	canvas.drawText(strScoreString, ((screenWidth/100)*60),((screenHeight/100)*10),paint );
 	}
+	private void drawLives(Canvas canvas)
+	{
+		String strlifeString = String.format("Life: %d", life);
+    	
+    	Resources resources = this.getResources();
+    	float scale = resources.getDisplayMetrics().density;
+    	Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    	  // text color - #3D3D3D
+    	  paint.setColor(Color.rgb(120, 120, 120));
+    	  // text size in pixels
+    	  paint.setTextSize((int) (40 * scale));
+    	  // text shadow
+    	  paint.setShadowLayer(1f, 0f, 1f, Color.WHITE);
+    	canvas.drawText(strlifeString, ((screenWidth/100)*10),((screenHeight/100)*10),paint );
+	}
+	
 	
 	
 	protected void onDraw(Canvas canvas) {
@@ -198,11 +219,17 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		
         if (lastTick < System.currentTimeMillis()  +250) {
         	lastTick = System.currentTimeMillis();
-        	if(r.nextInt(50) == 1){
+        if(timer >5) timer -= 0.25;
+        
+        Log.d(TAG, "score =" + score);
+        	
+        	if(r.nextInt((int) timer) == 1){
+       
         		 for(int i=0; i<robot.length; i++){
         			 if(robot[i].getX() ==-300){
         				robot[i].setX(-100);
         				robot[i].setY(r.nextInt(screenHeight));
+        				break;
         			 }
         		 }
         	}
@@ -216,6 +243,8 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         	}
         	collisionDetect();
         	monkey.waveArm();
+        	drawScore(canvas);
+        	drawLives(canvas);
         	
         	
         }
@@ -223,23 +252,35 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	}
 
  public void collisionDetect() {
+	 
 	 for(int i=0; i<robot.length; i++){
-		 for(int j=0; j<banana.length; j++){
-	 if(banana[j].getX() < robot[i].getX()+robot[i].getWidth() && banana[j].getX()+ banana[j].getWidth() > robot[i].getX()){
-		 if(banana[j].getY() < robot[i].getY() + robot[i].getHeight() && banana[j].getY() + banana[j].getHeight() > robot[i].getY()){
+		 if(robot[i].getX() > -300){
+		   for(int j=0; j<banana.length; j++){
+			 if(banana[j].getX() > -300){
+	            if(banana[j].getX() < robot[i].getX()+robot[i].getWidth() && banana[j].getX()+ banana[j].getWidth() > robot[i].getX()){
+		          if(banana[j].getY() < robot[i].getY() + robot[i].getHeight() && banana[j].getY() + banana[j].getHeight() > robot[i].getY()){
 			 
-			 //collision
-			 score++;
-		 banana[j].setMoveX(0);
-		 robot[i].kill();
+		        	  //collision
+		        	  score++;
+		        	  banana[j].setMoveX(0);
+		        	  robot[i].kill();
+		 
 		// let teh banana fall away banana.setMoveY(0);
+		          }
+	            }
+			 }
+		   }
 		 }
 	 }
-	 }
-	 }
+	 
 	 for(int i=0; i<robot.length; i++){
 	   if(robot[i].getX() > screenWidth){
  		 robot[i].kill();
+ 		 life--;
+ 		 if(life <= 0){
+ 			 life = 10;
+ 			 score = 0;
+ 		 }
 	   }
 	 }
 }
