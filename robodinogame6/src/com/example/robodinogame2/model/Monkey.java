@@ -5,6 +5,7 @@ import com.example.robodinogame2.R;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 
 
 
@@ -24,6 +25,11 @@ public class Monkey {
 	private Bitmap bmpTail;
 	private int tailX;
 	private int tailY;
+	private Bitmap rotatableRightArmBitmap;
+	private int rightArmOrientationDegree;
+	private direction rightArmOrientationDirection;
+	private enum direction {backwards,
+			forwards};
 	
 	
 	public Monkey(Bitmap bodyBitmap, Bitmap headBitmap, Bitmap rightArmBitmap, Bitmap leftArmBitmap, Bitmap tailBitmap,int assemblyX, int assemblyY) { //
@@ -42,6 +48,41 @@ public class Monkey {
 		this.rightArmY = assemblyY;
 		this.tailX = assemblyX;
 		this.tailY = assemblyY; //*/
+		rotatableRightArmBitmap = rightArmBitmap;
+		rightArmOrientationDegree=0;
+		rightArmOrientationDirection=direction.backwards;
+	} 
+	
+	
+	public void waveArm()
+	{
+		if(rightArmOrientationDirection==direction.forwards)
+		{
+			rightArmOrientationDegree++;
+			if(rightArmOrientationDegree>=20)
+			{
+				rightArmOrientationDirection=direction.backwards;
+			}
+		}
+		else
+		{
+			rightArmOrientationDegree--;
+			if(rightArmOrientationDegree<=0)
+			{rightArmOrientationDegree=360;}
+			if(rightArmOrientationDegree==300)
+			{
+				rightArmOrientationDirection=direction.forwards;
+			}
+		}
+		setOrientation(rightArmOrientationDegree);
+	}
+	
+	private void setOrientation(int degree){
+		rightArmOrientationDegree=degree;
+		Matrix matrix = new Matrix();
+		matrix.postRotate(degree);
+		this.rotatableRightArmBitmap = Bitmap.createBitmap(this.bmpRightArm, 0, 0, this.bmpRightArm.getWidth(),this.bmpRightArm.getHeight(), matrix, false);
+
 	}
 		
 /*	public int getX() {
