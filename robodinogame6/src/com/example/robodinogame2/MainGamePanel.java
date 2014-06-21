@@ -49,7 +49,12 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		  banana[i]  = new Banana(BitmapFactory.decodeResource(getResources(), R.drawable.betterbanana),-300,200,100);
 		}
 		 thread = new MainThread(getHolder(),this);
-		 monkey = new Monkey(BitmapFactory.decodeResource(getResources(), R.drawable.bettermonkey),screenWidth-200,screenHeight-200);
+		 monkey = new Monkey(BitmapFactory.decodeResource(getResources(), R.drawable.monkeybody),
+				 BitmapFactory.decodeResource(getResources(), R.drawable.monkeyhead),
+				 BitmapFactory.decodeResource(getResources(), R.drawable.monkeyrightarm),
+				 BitmapFactory.decodeResource(getResources(), R.drawable.monkeyleftarm),
+				 BitmapFactory.decodeResource(getResources(), R.drawable.monkeytail),
+				 screenWidth-500,screenHeight-500);
 		// make the GamePanel focusable so it can handle events
 		 setFocusable(true);
 		 //detect scren size
