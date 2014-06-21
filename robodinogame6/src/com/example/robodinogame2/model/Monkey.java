@@ -59,7 +59,9 @@ public class Monkey {
 		if(rightArmOrientationDirection==direction.forwards)
 		{
 			rightArmOrientationDegree++;
-			if(rightArmOrientationDegree>=20)
+			if(rightArmOrientationDegree>=360)
+			{rightArmOrientationDegree=0;}
+			if(rightArmOrientationDegree==20)
 			{
 				rightArmOrientationDirection=direction.backwards;
 			}
@@ -69,7 +71,7 @@ public class Monkey {
 			rightArmOrientationDegree--;
 			if(rightArmOrientationDegree<=0)
 			{rightArmOrientationDegree=360;}
-			if(rightArmOrientationDegree==300)
+			if(rightArmOrientationDegree==350)
 			{
 				rightArmOrientationDirection=direction.forwards;
 			}
@@ -103,7 +105,7 @@ public class Monkey {
 		 canvas.drawBitmap(this.bmpBody,bodyX, bodyY, null);
 		canvas.drawBitmap(this.bmpHead, bodyX, bodyY, null);
 		 canvas.drawBitmap(this.bmpLeftarm, bodyX, bodyY, null);
-		 canvas.drawBitmap(this.bmpRightArm, bodyX, bodyY, null);
+		 canvas.drawBitmap(this.rotatableRightArmBitmap, bodyX, bodyY, null);
 		 canvas.drawBitmap(this.bmpTail, bodyX, bodyY, null);
 		 //*/
 		

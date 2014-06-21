@@ -29,6 +29,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	 int screenWidth;
 	 int screenHeight;
 	 int currentBanana = 0;
+	 int score = 0;
 	 
 	 Random r=new Random();
 	//	speed= r.nextInt(10);
@@ -186,13 +187,17 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         			 }
         		 }
         	}
+        	
         	for(int i=0; i<robot.length; i++){
         	   robot[i].update();  // <--monkey? TODO
         	}
+        	
         	for(int i=0; i<banana.length; i++){
         	    banana[i].update();
         	}
         	collisionDetect();
+        	monkey.waveArm();
+        	R.id.score;
         }
 		//canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 10, 10,null);
 	}
@@ -204,6 +209,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		 if(banana[j].getY() < robot[i].getY() + robot[i].getHeight() && banana[j].getY() + banana[j].getHeight() > robot[i].getY()){
 			 
 			 //collision
+			 score++;
 		 banana[j].setMoveX(0);
 		 robot[i].kill();
 		// let teh banana fall away banana.setMoveY(0);
