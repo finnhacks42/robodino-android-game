@@ -8,11 +8,15 @@ public class Robot {
 	private int x;
 	private int y;
 	private boolean touched;
+	private int width;
+	private int height;
 	
 	public Robot(Bitmap bitmap, int x, int y) {
 		this.bitmap = bitmap;
 		this.x = x;
 		this.y = y;
+		width = bitmap.getWidth();
+		height = bitmap.getHeight();
 	}
 	
 	public boolean isTouched() {
@@ -63,6 +67,22 @@ public class Robot {
 
 	public void setY(int y) {
 		this.y = y;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 	

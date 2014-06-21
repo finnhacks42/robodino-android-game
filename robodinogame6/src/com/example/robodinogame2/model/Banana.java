@@ -12,6 +12,11 @@ private int y;
 private int velocity;
 private int angle;
 private int scale;
+private int height = 50;
+private int width = 50;
+
+//vars for the amount we should adjust for movement (this was much easier than using angle+velocity
+// but we may have to come back and convert it at some stage...
 private int moveX;
 private int moveY;
 
@@ -54,7 +59,7 @@ public void rotateBanana(){
 public Banana(Bitmap bitmap, int x, int y, int scale) {
 	
 	this.bitmap = bitmap;
-	this.scaledBananaBitmap= Bitmap.createScaledBitmap(this.bitmap, 120, 120, false);
+	this.scaledBananaBitmap= Bitmap.createScaledBitmap(this.bitmap, width, height, false);
 	this.x = x;
 	this.y = y;
 	
@@ -68,8 +73,15 @@ public void draw(Canvas canvas) {
 	
 }
 public void update(){
+	//update the movement
 	x+=moveX;
 	y+=moveY;
+	//apply gravity
+	moveY+=2;
+	
+
+
+	
 }
 public int getMoveX() {
 	return moveX;
@@ -83,4 +95,11 @@ public int getMovey() {
 public void setMoveY(int moveY) {
 	this.moveY = moveY;
 }
+public int getWidth() {
+	return width;
+}
+public int getHeight() {
+	return height;
+}
+
 }
