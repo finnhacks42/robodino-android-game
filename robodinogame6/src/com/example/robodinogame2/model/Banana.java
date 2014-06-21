@@ -12,6 +12,8 @@ private int y;
 private int velocity;
 private int angle;
 private int scale;
+private int moveX;
+private int moveY;
 
 
 public int getX() {
@@ -42,9 +44,9 @@ public void setY(int y) {
 	this.y = y;
 }
 
-private void rotateBanana(){
+public void rotateBanana(){
 	Matrix matrix = new Matrix();
-	matrix.setRotate(15);
+	matrix.setRotate(1);
 	Bitmap bmpBowRotated = Bitmap.createBitmap(this.scaledBananaBitmap, 0, 0, this.scaledBananaBitmap.getWidth(),this.scaledBananaBitmap.getHeight(), matrix, false);
 	this.scaledBananaBitmap=bmpBowRotated;
 }
@@ -64,5 +66,21 @@ public void draw(Canvas canvas) {
 	 canvas.drawBitmap(scaledBananaBitmap, x, y, null);
 	 
 	
+}
+public void update(){
+	x+=moveX;
+	y+=moveY;
+}
+public int getMoveX() {
+	return moveX;
+}
+public void setMoveX(int moveX) {
+	this.moveX = moveX;
+}
+public int getMovey() {
+	return moveY;
+}
+public void setMoveY(int moveY) {
+	this.moveY = moveY;
 }
 }

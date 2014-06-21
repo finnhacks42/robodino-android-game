@@ -95,11 +95,13 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 			}
 			Log.d(TAG, "end vals = " + banana.getX() + " , " + banana.getY());
 			
+			int diffX = startX - banana.getX();
+			int diffY = startY - banana.getY();
+			Log.d(TAG, "diff = " + diffX + " , " + diffY);
 
-			double theta = Math.atan2(startY - banana.getY(), startX - banana.getX());
+			double theta = Math.atan2(diffY, diffX);
 	
-			 
-		   // theta += Math.PI/2.0;
+
 
 		
 		    double angle = Math.toDegrees(theta);
@@ -108,6 +110,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		        angle += 360;
 		    }
 		    
+		    //if(diffY<0) diffY = diffY *-1;
+		   // if(diffX<0) diffX = diffX *-1;
+		    banana.setMoveX(diffX/10);
+		    banana.setMoveY(diffY/10);
 		    banana.setVelocity((int)Math.sqrt(Math.pow(startX - banana.getX(), 2) + Math.pow(startY- banana.getY(), 2)));
 		    banana.setAngle((int)angle);
 		    Log.d(TAG, "angle =" + banana.getAngle());
@@ -118,12 +124,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		
 	}
 	
-	public void bananaupdate(){
-		
 	
-	
-	
-	}
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
 		robot.draw(canvas);
@@ -132,9 +133,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 
         if (lastTick < System.currentTimeMillis()  +250) {
         	lastTick = System.currentTimeMillis();
-        	bananaupdate();
-        	banana.setY(banana.getY()+ 10);
-        	Log.d(TAG, "tick...");
+        	//banana.setY(banana.getY()+ 10);
+        	//banana.rotateBanana();
+        	//Log.d(TAG, "tick...");
+        	banana.update();
         }
 		//canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 10, 10,null);
 	}
