@@ -1,5 +1,6 @@
 package com.example.robodinogame2;
 
+import com.example.robodinogame2.model.Banana;
 import com.example.robodinogame2.model.Robot;
 
 import android.app.Activity;
@@ -16,7 +17,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	private static String TAG = MainGamePanel.class.getSimpleName();
 	private MainThread thread;
 	private Robot robot;
-	private Robot bana;
+	private Banana banana;
 	
 	public MainGamePanel(Context context) {
 		super(context);
@@ -24,8 +25,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		 getHolder().addCallback(this);
 		 
 		 robot = new Robot(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1),50,50);
-		 bana = new Robot(BitmapFactory.decodeResource(getResources(), R.drawable.bana),350,550);
-		 
+		 banana  = new Banana(BitmapFactory.decodeResource(getResources(), R.drawable.betterbanana),200,200);
 		 thread = new MainThread(getHolder(),this);
 		 
 		// make the GamePanel focusable so it can handle events
@@ -58,7 +58,13 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	}
 	
 	public boolean onTouchEvent(MotionEvent event) {
+		int startX = 0;
+		int startY = 0;
+		
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			startX = (int)event.getX();
+			startY = (int)event.getY();
+			Log.d(TAG, "start vals = " + startX + " , " + startY);
 			robot.handleActionDown((int)event.getX(),(int)event.getY());
 			if (event.getY() > getHeight() - 100) {
 				thread.setRunning(false);
@@ -73,12 +79,29 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 				robot.setX((int)event.getX());
 				robot.setY((int)event.getY());
 			}
+			banana.setX((int)event.getX());
+			banana.setY((int)event.getY());
 		}
 		
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			if (robot.isTouched()) {
 				robot.setTouched(false);
+
 			}
+			Log.d(TAG, "end vals = " + banana.getX() + " , " + banana.getY());
+			
+			double theta = Math.atan2(startY - banana.getY(), startX - banana.getX());
+			Log.d(TAG, "angle rad =" + theta);
+			 
+		    theta += Math.PI/2.0;
+
+		
+		    double angle = Math.toDegrees(theta);
+
+		    if (angle < 0) {
+		        angle += 360;
+		    }
+		    Log.d(TAG, "angle =" + angle);
 		}
 		
 		return true;
@@ -88,7 +111,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
 		robot.draw(canvas);
-		bana.draw(canvas);
+		banana.draw(canvas);
 		//canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 10, 10,null);
 	}
 
