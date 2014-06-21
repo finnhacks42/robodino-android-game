@@ -197,7 +197,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         	}
         	collisionDetect();
         	monkey.waveArm();
-        	R.id.score;
+        	
         }
 		//canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 10, 10,null);
 	}
