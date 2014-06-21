@@ -90,10 +90,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 			}
 			Log.d(TAG, "end vals = " + banana.getX() + " , " + banana.getY());
 			
-			double theta = Math.atan2(startY - banana.getY(), startX - banana.getX());
+			double theta = Math.atan2(10-10,20-10);//startY - banana.getY(), startX - banana.getX());
 			Log.d(TAG, "angle rad =" + theta);
 			 
-		    theta += Math.PI/2.0;
+		   // theta += Math.PI/2.0;
 
 		
 		    double angle = Math.toDegrees(theta);
