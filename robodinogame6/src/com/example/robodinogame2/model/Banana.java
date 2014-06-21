@@ -2,6 +2,7 @@ package com.example.robodinogame2.model;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 
 public class Banana {
 	private Bitmap bitmap;
@@ -40,6 +41,14 @@ public int getY() {
 public void setY(int y) {
 	this.y = y;
 }
+
+private void rotateBanana(){
+	Matrix matrix = new Matrix();
+	matrix.setRotate(15);
+	Bitmap bmpBowRotated = Bitmap.createBitmap(this.scaledBananaBitmap, 0, 0, this.scaledBananaBitmap.getWidth(),this.scaledBananaBitmap.getHeight(), matrix, false);
+	this.scaledBananaBitmap=bmpBowRotated;
+}
+
 public Banana(Bitmap bitmap, int x, int y, int scale) {
 	
 	this.bitmap = bitmap;
