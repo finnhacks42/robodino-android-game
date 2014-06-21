@@ -1,7 +1,10 @@
 package com.example.robodinogame2.model;
 
+import java.util.Random;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.util.DisplayMetrics;
 
 public class Robot {
 	private Bitmap bitmap;
@@ -10,6 +13,7 @@ public class Robot {
 	private boolean touched;
 	private int width;
 	private int height;
+	private int speed;
 	
 	public Robot(Bitmap bitmap, int x, int y) {
 		this.bitmap = bitmap;
@@ -17,6 +21,11 @@ public class Robot {
 		this.y = y;
 		width = bitmap.getWidth();
 		height = bitmap.getHeight();
+		Random r=new Random();
+		speed= r.nextInt(10);
+		
+
+		
 	}
 	
 	public boolean isTouched() {
@@ -84,7 +93,16 @@ public class Robot {
 	public void setHeight(int height) {
 		this.height = height;
 	}
-
+public void update(){
+	if(x > -300){
+	x+=speed;
+	}
+}
+public void kill(){
+	x = -100;
+	
+		
+}
 	
 	
 	

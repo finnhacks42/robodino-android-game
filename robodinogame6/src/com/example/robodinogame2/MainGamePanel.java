@@ -1,5 +1,7 @@
 package com.example.robodinogame2;
 
+import java.util.Random;
+
 import com.example.robodinogame2.model.Banana;
 import com.example.robodinogame2.model.Monkey;
 import com.example.robodinogame2.model.Robot;
@@ -9,9 +11,8 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Point;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -19,33 +20,37 @@ import android.view.SurfaceView;
 public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback {
 	private static String TAG = MainGamePanel.class.getSimpleName();
 	private MainThread thread;
-	private Robot robot;
+	private Robot[] robot = new Robot[10];
 	private Banana banana;
 	private Monkey monkey;
 	long lastTick = 0;
 	int startX = 0;
 	int startY = 0;
-	
+	 int screenWidth;
+	 int screenHeight;
+	 Random r=new Random();
+	//	speed= r.nextInt(10);
 	
 	public MainGamePanel(Context context) {
 		super(context);
 		// adding the callback (this) to the surface holder to intercept events
 		 getHolder().addCallback(this);
+		 DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		 screenWidth = metrics.widthPixels;
+		 screenHeight = metrics.heightPixels;
 		 
-		 robot = new Robot(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1),50,50);
+		 //initialise robots
+		 for(int i=0; i<robot.length; i++){
+		       robot[i] = new Robot(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1),-300,r.nextInt(screenHeight));
+		}
 		 banana  = new Banana(BitmapFactory.decodeResource(getResources(), R.drawable.betterbanana),200,200,100);
 		 thread = new MainThread(getHolder(),this);
-		 monkey = new Monkey(BitmapFactory.decodeResource(getResources(), R.drawable.bettermonkey),50,50);
+		 monkey = new Monkey(BitmapFactory.decodeResource(getResources(), R.drawable.bettermonkey),screenWidth-200,screenHeight-200);
 		// make the GamePanel focusable so it can handle events
 		 setFocusable(true);
-		 
-		 //detect screen size
-		 
-	//	 Display display = getWindowManager().getDefaultDisplay();
-	//	 Point size = new Point();
-	//	 display.getSize(size);
-	//	 int width = size.x;
-	//	 int height = size.y;
+		 //detect scren size
+
+		
 	}
 
 	@Override
@@ -81,7 +86,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 			startX = (int)event.getX();
 			startY = (int)event.getY();
 
-			robot.handleActionDown((int)event.getX(),(int)event.getY());
+			//robot.handleActionDown((int)event.getX(),(int)event.getY());
 			if (event.getY() > getHeight() - 100) {
 				thread.setRunning(false);
 				((Activity)getContext()).finish();
@@ -91,10 +96,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		}
 		
 		if (event.getAction() == MotionEvent.ACTION_MOVE) {
-			if (robot.isTouched()) {
-				robot.setX((int)event.getX());
-				robot.setY((int)event.getY());
-			}
+		//	if (robot.isTouched()) {
+		//		robot.setX((int)event.getX());
+		//		robot.setY((int)event.getY());
+		//	}
 			//move banana with finger
 			banana.setX((int)event.getX());
 			banana.setY((int)event.getY());
@@ -104,10 +109,10 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 			//set end point for the drag event
 			banana.setX((int)event.getX());
 			banana.setY((int)event.getY());
-			if (robot.isTouched()) {
-				robot.setTouched(false);
+		//	if (robot.isTouched()) {
+		//		robot.setTouched(false);
 
-			}
+		//	}
 			Log.d(TAG, "end vals = " + banana.getX() + " , " + banana.getY());
 			
 			//calculate difference between start and end touch points
@@ -150,15 +155,27 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.BLACK);
-		robot.draw(canvas);
+		 for(int i=0; i<robot.length; i++){
+		robot[i].draw(canvas);
+		 }
 		banana.draw(canvas);
+		monkey.draw(canvas);
 		
-//I'm using the draw method to update the game at 25fps
+        //I'm using the draw method to update the game at 25fps
 		
         if (lastTick < System.currentTimeMillis()  +250) {
         	lastTick = System.currentTimeMillis();
-
-        	//robot.update();   <--monkey? TODO
+        	if(r.nextInt(10) == 1){
+        		 for(int i=0; i<robot.length; i++){
+        			 if(robot[i].getX() ==-300){
+        				robot[i].setX(-100);
+        				robot[i].setY(r.nextInt(screenHeight));
+        			 }
+        		 }
+        	}
+        	for(int i=0; i<robot.length; i++){
+        	   robot[i].update();  // <--monkey? TODO
+        	}
         	banana.update();
         	collisionDetect();
         }
@@ -166,14 +183,21 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	}
 
  public void collisionDetect() {
-	 
-	 if(banana.getX() < robot.getX()+robot.getWidth() && banana.getX()+ banana.getWidth() > robot.getX()){
-		 if(banana.getY() < robot.getY() + robot.getHeight() && banana.getY() + banana.getHeight() > robot.getY()){
+	 for(int i=0; i<robot.length; i++){
+	 if(banana.getX() < robot[i].getX()+robot[i].getWidth() && banana.getX()+ banana.getWidth() > robot[i].getX()){
+		 if(banana.getY() < robot[i].getY() + robot[i].getHeight() && banana.getY() + banana.getHeight() > robot[i].getY()){
 			 
 			 //collision
 		 banana.setMoveX(0);
-		 banana.setMoveY(0);
+		 robot[i].kill();
+		// let teh banana fall away banana.setMoveY(0);
 		 }
+	 }
+	 }
+	 for(int i=0; i<robot.length; i++){
+	   if(robot[i].getX() > screenWidth){
+ 		 robot[i].kill();
+	   }
 	 }
 }
  
