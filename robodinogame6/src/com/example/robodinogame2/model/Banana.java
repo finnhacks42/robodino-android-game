@@ -5,10 +5,12 @@ import android.graphics.Canvas;
 
 public class Banana {
 	private Bitmap bitmap;
+private Bitmap scaledBananaBitmap;
 private int x;
 private int y;
 private int velocity;
 private int angle;
+private int scale;
 
 public int getX() {
 	return x;
@@ -20,9 +22,7 @@ public void setVelocity(int velocity) {
 	this.velocity = velocity;
 }
 
-public void setDensity(int density){
-	this.bitmap.setDensity(density);
-}
+
 
 public int getAngle() {
 	return angle;
@@ -39,14 +39,20 @@ public int getY() {
 public void setY(int y) {
 	this.y = y;
 }
-public Banana(Bitmap bitmap, int x, int y) {
+public Banana(Bitmap bitmap, int x, int y, int scale) {
+	
 	this.bitmap = bitmap;
+	this.scaledBananaBitmap= Bitmap.createScaledBitmap(this.bitmap, 120, 120, false);
 	this.x = x;
 	this.y = y;
+	
+	
 }
 
 public void draw(Canvas canvas) {
-	 canvas.drawBitmap(bitmap, x, y, null);
+	
+	 canvas.drawBitmap(scaledBananaBitmap, x, y, null);
+	 
 	
 }
 }
