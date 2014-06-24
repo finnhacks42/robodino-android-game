@@ -26,6 +26,8 @@ public class Monkey {
 	private Bitmap bmpTail;
 	private int tailX;
 	private int tailY;
+	private int assemblyX;
+	private int assemblyY;
 	private Bitmap rotatableRightArmBitmap;
 	private int rightArmRotationAngle;
 	private direction rightArmRotationDirection;
@@ -61,6 +63,8 @@ public class Monkey {
 		this.rightArmY = assemblyY;
 		this.tailX = assemblyX;
 		this.tailY = assemblyY; //*/
+		this.assemblyX = assemblyX;
+		this.assemblyY = assemblyY;
 		rotatableRightArmBitmap = rightArmBitmap;
 		rightArmRotationAngle=0;
 		rightArmRotationDirection=direction.backwards;
@@ -149,7 +153,14 @@ public class Monkey {
 	
 	
 	
+	public int getAssemblyX(){
+		return assemblyX;
+	}
 	
+	public int getAssemblyY()
+	{
+		return assemblyY;
+	}
 		
 /*	public int getX() {
 		return x;
