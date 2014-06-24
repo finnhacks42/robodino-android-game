@@ -242,6 +242,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         	    banana[i].update();
         	}
         	collisionDetect();
+        	monkey.wiggleTail();
         	monkey.waveArm();
         	drawScore(canvas);
         	drawLives(canvas);

@@ -3,6 +3,7 @@ package com.example.robodinogame2.model;
 import com.example.robodinogame2.R;
 
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -26,8 +27,11 @@ public class Monkey {
 	private int tailX;
 	private int tailY;
 	private Bitmap rotatableRightArmBitmap;
-	private int rightArmOrientationDegree;
-	private direction rightArmOrientationDirection;
+	private int rightArmRotationAngle;
+	private direction rightArmRotationDirection;
+	private Bitmap rotatableTailBitmap;
+	private int tailRotationAngle;
+	private direction tailRotationDirection;
 	private enum direction {backwards,
 			forwards};
 	
@@ -49,43 +53,88 @@ public class Monkey {
 		this.tailX = assemblyX;
 		this.tailY = assemblyY; //*/
 		rotatableRightArmBitmap = rightArmBitmap;
-		rightArmOrientationDegree=0;
-		rightArmOrientationDirection=direction.backwards;
+		rightArmRotationAngle=0;
+		rightArmRotationDirection=direction.backwards;
+		rotatableTailBitmap=tailBitmap;
+		tailRotationAngle=0;
+		tailRotationDirection=direction.backwards;
 	} 
 	
+	private Bitmap rotateBitmap(Bitmap bitmap, float angle) {
+		// Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+		//        R.drawable.original);
+		    Bitmap rotateBitmap = Bitmap.createBitmap(bitmap.getWidth(),
+		    bitmap.getHeight(), Config.ARGB_8888);
+		    Canvas canvas = new Canvas(rotateBitmap);
+		    Matrix matrix = new Matrix();
+		    matrix.postRotate(angle, bitmap.getWidth() / 2, bitmap.getHeight() / 2);
+		    canvas.drawBitmap(bitmap, matrix, null);
+		    return rotateBitmap;
+		}
 	
 	public void waveArm()
 	{
-		if(rightArmOrientationDirection==direction.forwards)
+		if(rightArmRotationDirection==direction.forwards)
 		{
-			rightArmOrientationDegree++;
-			if(rightArmOrientationDegree>=360)
-			{rightArmOrientationDegree=0;}
-			if(rightArmOrientationDegree==20)
+			rightArmRotationAngle+=5;
+			if(rightArmRotationAngle>=360)
+			{rightArmRotationAngle=0;}
+			if(rightArmRotationAngle==40)
 			{
-				rightArmOrientationDirection=direction.backwards;
+				rightArmRotationDirection=direction.backwards;
 			}
 		}
 		else
 		{
-			rightArmOrientationDegree--;
-			if(rightArmOrientationDegree<=0)
-			{rightArmOrientationDegree=360;}
-			if(rightArmOrientationDegree==350)
+			rightArmRotationAngle-=5;
+			if(rightArmRotationAngle<=0)
+			{rightArmRotationAngle=360;}
+			if(rightArmRotationAngle==320)
 			{
-				rightArmOrientationDirection=direction.forwards;
+				rightArmRotationDirection=direction.forwards;
 			}
 		}
-		setOrientation(rightArmOrientationDegree);
+		
+		rotatableRightArmBitmap=rotateBitmap(bmpRightArm, rightArmRotationAngle);
+		
 	}
 	
-	private void setOrientation(int degree){
-		rightArmOrientationDegree=degree;
-		Matrix matrix = new Matrix();
-		matrix.postRotate(degree);
-		this.rotatableRightArmBitmap = Bitmap.createBitmap(this.bmpRightArm, 0, 0, this.bmpRightArm.getWidth(),this.bmpRightArm.getHeight(), matrix, false);
+	
+	
 
+	
+	public void wiggleTail()
+	{
+		if(tailRotationDirection==direction.forwards)
+		{
+			tailRotationAngle+=1;
+			if(tailRotationAngle>=360)
+			{tailRotationAngle=0;}
+			if(tailRotationAngle==20)
+			{
+				tailRotationDirection=direction.backwards;
+			}
+		}
+		else
+		{
+			tailRotationAngle-=1;
+			if(tailRotationAngle<=0 || (tailRotationAngle==360))
+			{tailRotationAngle=0;}
+			if(tailRotationAngle==0)
+			{
+				tailRotationDirection=direction.forwards;
+			}
+		}
+		
+		rotatableTailBitmap=rotateBitmap(bmpTail, tailRotationAngle);
+		
+		
 	}
+
+	
+	
+	
+	
 		
 /*	public int getX() {
 		return x;
@@ -105,8 +154,10 @@ public class Monkey {
 		 canvas.drawBitmap(this.bmpBody,bodyX, bodyY, null);
 		canvas.drawBitmap(this.bmpHead, bodyX, bodyY, null);
 		 canvas.drawBitmap(this.bmpLeftarm, bodyX, bodyY, null);
+		 canvas.drawBitmap(this.rotatableTailBitmap, bodyX, bodyY, null);
+		 canvas.drawBitmap(this.bmpBody,bodyX, bodyY, null);
 		 canvas.drawBitmap(this.rotatableRightArmBitmap, bodyX, bodyY, null);
-		 canvas.drawBitmap(this.bmpTail, bodyX, bodyY, null);
+		 
 		 //*/
 		
 	}
