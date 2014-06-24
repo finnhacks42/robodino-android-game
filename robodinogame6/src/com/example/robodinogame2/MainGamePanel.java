@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -33,13 +34,20 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	 int screenHeight;
 	 int currentBanana = 0;
 	 int score = 0;
-
+int explosionSize = 4; //smaller is bigger
 	 int life = 10;
 	 float timer=150;
 
 	 String strScoreString="Score:";
+
+	    Paint paint = new Paint();                          //define paint and paint color
+
+
+	 
+
      Bitmap backgroundBmp;
 
+	 
 	 Random r=new Random();
 	//	speed= r.nextInt(10);
 	
@@ -125,14 +133,21 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		//		robot.setY((int)event.getY());
 		//	}
 			//move banana with finger
-			banana[currentBanana].setX((int)event.getX());
-			banana[currentBanana].setY((int)event.getY());
+		//	banana[currentBanana].setX((int)event.getX());
+		//	banana[currentBanana].setY((int)event.getY());
+		      banana[currentBanana].setVelocity(((int)Math.sqrt(Math.pow(startX - banana[currentBanana].getX(), 2) + Math.pow(startY- banana[currentBanana].getY(), 2)))); 
+
 		}
 		
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			//set end point for the drag event
-			banana[currentBanana].setX((int)event.getX());
-			banana[currentBanana].setY((int)event.getY());
+			
+			if((int)event.getX()> monkey.getAssemblyX() && event.getY() > monkey.getAssemblyY()){
+				
+				banana[currentBanana].setX((int)event.getX());
+				banana[currentBanana].setY((int)event.getY());
+		      banana[currentBanana].setVelocity(((int)Math.sqrt(Math.pow(startX - banana[currentBanana].getX(), 2) + Math.pow(startY- banana[currentBanana].getY(), 2)))); 
+
 		//	if (robot.isTouched()) {
 		//		robot.setTouched(false);
 
@@ -158,7 +173,6 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 			banana.setVelocity((int)Math.sqrt(Math.pow(startX - banana.getX(), 2) + Math.pow(startY- banana.getY(), 2))); 
 			banana.setAngle((int)angle);
 		    //*/
-		    
 			
 			//cheat code for banana movement: simply send 2 values that are added to the X and
 			// y co-ords every tick, incrementing the y value every tick to add gravity.
@@ -173,7 +187,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		    Log.d(TAG, "angle =" + banana[currentBanana].getAngle());
 		    Log.d(TAG, "velocity =" + banana[currentBanana].getVelocity());
 		}
-		
+		}
 		return true;
 		
 	}
@@ -212,9 +226,21 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	
 	
 	protected void onDraw(Canvas canvas) {
+
 		
+	    paint.setColor(Color.RED);
+	    paint.setStyle(Style.FILL_AND_STROKE);
+	    //paint.setAntiAlias(true);
+
+	  
+	    
+	    
+	
+
 		//canvas.drawColor(Color.BLACK);
 		canvas.drawBitmap(backgroundBmp,0,0,null);
+
+		  
 		 for(int i=0; i<robot.length; i++){
 		robot[i].draw(canvas);
 		 }
@@ -229,7 +255,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         	lastTick = System.currentTimeMillis();
         if(timer >5) timer -= 0.25;
         
-        Log.d(TAG, "score =" + score);
+       // Log.d(TAG, "score =" + score);
         	
         	if(r.nextInt((int) timer) == 1){
        
@@ -249,7 +275,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
         	for(int i=0; i<banana.length; i++){
         	    banana[i].update();
         	}
-        	collisionDetect();
+        	collisionDetect(canvas);
         	monkey.wiggleTail();
         	monkey.waveArm();
         	drawScore(canvas);
@@ -260,7 +286,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		//canvas.drawBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.droid_1), 10, 10,null);
 	}
 
- public void collisionDetect() {
+ public void collisionDetect(Canvas canvas) {
 	 
 	 for(int i=0; i<robot.length; i++){
 		 if(robot[i].getX() > -300){
@@ -271,8 +297,26 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 			 
 		        	  //collision
 		        	  score++;
-		        	  banana[j].setMoveX(0);
-		        	  robot[i].kill();
+		        	  Log.d(TAG, "moveX =" + banana[j].getMoveX());
+		        	  if (banana[j].getVelocity() != 0) {
+		        		  Log.d(TAG, "angleangleangle");
+		        		  robot[i].kill();
+		        		    canvas.drawCircle(banana[j].getX(), banana[j].getY(), Math.abs(banana[j].getVelocity())/explosionSize, paint);
+		        		    for(int k=0; k<robot.length; k++){
+		        		    	
+		        		    	if((int)Math.sqrt(Math.pow(robot[k].getX() - banana[j].getX(), 2) + Math.pow( robot[k].getY()- banana[j].getY(), 2)) < Math.abs(banana[j].getVelocity())/explosionSize) {
+		        		    		
+		        		    		robot[k].kill();
+		        		    	    score++;	
+		        		    	
+		        		    	}
+		        		    	
+		        		    }
+		        		    }
+		        		    
+		        		    banana[j].setMoveX(0);
+		        		    banana[j].setVelocity(0);
+		        	  }
 		 
 		// let teh banana fall away banana.setMoveY(0);
 		          }
@@ -280,7 +324,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 			 }
 		   }
 		 }
-	 }
+	 
 	 
 	 for(int i=0; i<robot.length; i++){
 	   if(robot[i].getX() > screenWidth){
