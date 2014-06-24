@@ -161,13 +161,18 @@ public class Monkey {
 	{
 		return assemblyY;
 	}
+	
+	public void setAssemblyX(int x){
+		this.assemblyX=x;
+	}
+	
+	public void setAssemblyY(int y)
+	{
+		this.assemblyY=y;
+	}
+	
 		
-/*	public int getX() {
-		return x;
-	}
-	public void setX(int x) {
-		this.x = x;
-	}
+/*	
 	public int getY() {
 		return y;
 	}
