@@ -9,6 +9,7 @@ import com.example.robodinogame2.model.Robot;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -37,7 +38,7 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	 float timer=150;
 
 	 String strScoreString="Score:";
-	 
+     Bitmap backgroundBmp;
 
 	 Random r=new Random();
 	//	speed= r.nextInt(10);
@@ -50,6 +51,11 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 		 screenWidth = metrics.widthPixels;
 		 screenHeight = metrics.heightPixels;
 		 strScoreString.format("Score: %d", score);
+		 
+		 //set background bitmap
+		 backgroundBmp=BitmapFactory.decodeResource(getResources(), R.drawable.unending_plain3);
+		 backgroundBmp= Bitmap.createScaledBitmap(backgroundBmp, screenWidth,  screenHeight, false);
+
 		 //initialise robots
 		 for(int i=0; i<robot.length; i++){
 		       robot[i] = new Robot(BitmapFactory.decodeResource(getResources(), R.drawable.dino),-300,r.nextInt(screenHeight));
@@ -206,7 +212,9 @@ public class MainGamePanel extends SurfaceView implements SurfaceHolder.Callback
 	
 	
 	protected void onDraw(Canvas canvas) {
-		canvas.drawColor(Color.BLACK);
+		
+		//canvas.drawColor(Color.BLACK);
+		canvas.drawBitmap(backgroundBmp,0,0,null);
 		 for(int i=0; i<robot.length; i++){
 		robot[i].draw(canvas);
 		 }
